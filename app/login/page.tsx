@@ -1,23 +1,21 @@
-import { Metadata } from "next"
-import Image from "next/image"
-import Link from "next/link"
+import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 
-import { LoginForm } from "@/components/login-form"
+import { LoginForm } from "@/components/login-form";
 
 export const metadata: Metadata = {
   title: "Login",
   description: "Login to your account",
-}
+};
 
 export default function LoginPage() {
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
-      <Link
-        href="/"
-        className="absolute left-4 top-4 md:left-8 md:top-8"
-      >
+      <Link href="/" className="absolute left-4 top-4 md:left-8 md:top-8">
         <>
           <Image src="/placeholder.svg" width={32} height={32} alt="Logo" />
+          AltAI
           <span className="sr-only">Home</span>
         </>
       </Link>
@@ -41,6 +39,5 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
-  )
+  );
 }
-
