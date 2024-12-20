@@ -1,4 +1,5 @@
-import { ImageIcon, KeyIcon, StarIcon } from "lucide-react";
+import { ArrowRight, ImageIcon, KeyIcon, StarIcon } from "lucide-react";
+import Link from "next/link";
 
 const features = [
   {
@@ -6,18 +7,21 @@ const features = [
     description:
       "Automatically generate descriptive alt text for your images to improve accessibility and SEO.",
     icon: ImageIcon,
+    url: "/alttext",
   },
   {
     name: "Hierarchical Keyword Generation",
     description:
       "Create SEO-optimized keyword hierarchies to structure your content effectively.",
     icon: KeyIcon,
+    url: "/hierarchical",
   },
   {
     name: "App Store Review Analysis",
     description:
       "Gain insights from your app reviews using AI-powered sentiment analysis and feedback categorization.",
     icon: StarIcon,
+    url: "/review",
   },
 ];
 
@@ -39,6 +43,14 @@ export default function Features() {
                 {feature.name}
               </h3>
               <p className="text-blue-700">{feature.description}</p>
+              <br></br>
+              <Link
+                href={feature.url}
+                className="text-blue-600 flex gap-2 hover:scale-105 transition-all duration-300"
+              >
+                Try it
+                <ArrowRight />
+              </Link>
             </div>
           ))}
         </div>
