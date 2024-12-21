@@ -27,26 +27,28 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="py-20 bg-white">
+    <section
+      id="features"
+      className="py-24 bg-gradient-to-b from-white to-blue-50"
+    >
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center text-blue-900 mb-12">
+        <h2 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-16">
           Our Products
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature) => (
             <div
               key={feature.name}
-              className="bg-blue-50 rounded-lg p-6 shadow-md"
+              className="bg-white/70 backdrop-blur rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-100"
             >
               <feature.icon className="w-12 h-12 text-blue-600 mb-4" />
               <h3 className="text-xl font-semibold text-blue-800 mb-2">
                 {feature.name}
               </h3>
-              <p className="text-blue-700">{feature.description}</p>
-              <br></br>
+              <p className="text-blue-700 mb-6">{feature.description}</p>
               <Link
                 href={feature.url}
-                className="text-blue-600 flex gap-2 hover:scale-105 transition-all duration-300"
+                className="text-blue-600 flex items-center gap-2 hover:gap-3 transition-all duration-300"
               >
                 Try it
                 <ArrowRight />
