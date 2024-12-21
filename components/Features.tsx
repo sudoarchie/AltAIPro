@@ -17,7 +17,7 @@ const features = [
     url: "/hierarchical",
   },
   {
-    name: "App Store Review Analysis",
+    name: "Review Analysis",
     description:
       "Gain insights from your app reviews using AI-powered sentiment analysis and feedback categorization.",
     icon: StarIcon,

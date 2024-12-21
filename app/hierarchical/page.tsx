@@ -56,10 +56,10 @@ const SEODashboard = () => {
           <div className="space-y-6">
             <div className="space-y-4">
               <label className="block text-sm font-medium text-blue-700">
-                Content
+                Keywords
               </label>
               <textarea
-                placeholder="Enter your content here..."
+                placeholder="Enter your Keywords here..."
                 className="w-full h-32 px-3 py-2 text-gray-700 border border-blue-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}

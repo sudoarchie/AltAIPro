@@ -4,6 +4,7 @@ import React, { useState, useCallback } from "react";
 const AltTextGenerator = () => {
   const [activeTab, setActiveTab] = useState<"upload" | "json">("upload");
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [jsonFile, setJsonFile] = useState<File | null>(null);
   const [jsonInput, setJsonInput] = useState("");
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [generatedAltText, setGeneratedAltText] = useState("");
@@ -26,6 +27,33 @@ const AltTextGenerator = () => {
 
         // Clean up old preview URL
         return () => URL.revokeObjectURL(url);
+      }
+    },
+    []
+  );
+
+  const handleJsonFileUpload = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        if (file.type !== "application/json") {
+          setError("Please upload a valid JSON file");
+          return;
+        }
+        setJsonFile(file);
+
+        // Read the JSON file content
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const content = e.target?.result as string;
+            setJsonInput(content);
+            setError("");
+          } catch (err) {
+            setError("Failed to read JSON file");
+          }
+        };
+        reader.readAsText(file);
       }
     },
     []
@@ -133,12 +161,37 @@ const AltTextGenerator = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                <textarea
-                  placeholder='Enter JSON data (e.g., {"subject": "mountain landscape", "description": "during sunset"})'
-                  className="w-full h-32 px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                  value={jsonInput}
-                  onChange={handleJsonInput}
-                />
+                <div className="flex flex-col space-y-4">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <input
+                      type="file"
+                      accept="application/json"
+                      onChange={handleJsonFileUpload}
+                      className="hidden"
+                      id="json-upload"
+                    />
+                    <label
+                      htmlFor="json-upload"
+                      className="cursor-pointer block"
+                    >
+                      <div className="text-gray-500">
+                        <p className="text-lg font-medium">
+                          Drop your JSON file here
+                        </p>
+                        <p className="text-sm">or click to browse</p>
+                      </div>
+                    </label>
+                  </div>
+                  <div className="relative">
+                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent to-white"></div>
+                    <textarea
+                      placeholder='Or paste JSON data (e.g., {"subject": "mountain landscape", "description": "during sunset"})'
+                      className="w-full h-32 px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      value={jsonInput}
+                      onChange={handleJsonInput}
+                    />
+                  </div>
+                </div>
               </div>
             )}
 
