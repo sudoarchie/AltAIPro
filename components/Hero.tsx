@@ -1,5 +1,5 @@
 import Image from "next/image";
-import img from "@/public/hero.png";
+import img from "@/public/hero.svg";
 import { TextGenerateEffect } from "./ui/text-generate-effect";
 export default function Hero() {
   const words =
@@ -8,7 +8,7 @@ export default function Hero() {
     <section className="bg-gradient-to-br from-blue-50 via-white to-blue-100 py-24">
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
         <div className="md:w-1/2 mb-8 md:mb-0">
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-4 ">
             Supercharge Your SEO with AI
           </h1>
           <div className="text-xl text-blue-700 mb-6">
