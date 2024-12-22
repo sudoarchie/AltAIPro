@@ -1,33 +1,48 @@
 import Image from "next/image";
 import img from "@/public/hero.svg";
 import { TextGenerateEffect } from "./ui/text-generate-effect";
+import { TypewriterEffect } from "./ui/typewriter-effect";
 export default function Hero() {
+  const wordsfortype = [
+    {
+      text: "Supercharge",
+      className:
+        "text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent",
+    },
+    {
+      text: "your",
+      className:
+        "text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-6",
+    },
+    {
+      text: "SEO",
+      className:
+        "text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-6",
+    },
+    {
+      text: "with",
+      className:
+        "text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-6",
+    },
+    {
+      text: "AI.",
+      className:
+        "text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-6",
+    },
+  ];
   const words =
     "Generate alt text, keywords, and analyze app reviews automatically.";
   return (
-    <section className="bg-gradient-to-br from-blue-50 via-white to-blue-100 py-24">
-      <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
-        <div className="md:w-1/2 mb-8 md:mb-0">
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-4 ">
-            Supercharge Your SEO with AI
-          </h1>
-          <div className="text-xl text-blue-700 mb-6">
-            <TextGenerateEffect duration={2} filter={false} words={words} />
-            {/* Generate alt text, keywords, and analyze app reviews automatically. */}
-          </div>
-          <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-lg hover:scale-105 transition duration-300">
-            Try It Free
-          </button>
+    <section className="bg-gradient-to-br from-blue-50 via-white to-blue-100 py-24 h-screen w-screen flex items-center justify-center">
+      <div className="container mx-auto px-4 flex flex-col items-center text-center">
+        <TypewriterEffect words={wordsfortype} />
+        <h1 className="text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-6"></h1>
+        <div className="text-2xl text-blue-700 mb-8">
+          <TextGenerateEffect duration={6} filter={false} words={words} />
         </div>
-        <div className="md:w-1/2">
-          <Image
-            src={img}
-            alt="AI SEO Tool Dashboard"
-            width={600}
-            height={400}
-            className="rounded-lg shadow-xl"
-          />
-        </div>
+        <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-10 py-4 rounded-full text-xl font-bold hover:shadow-2xl hover:scale-110 transition-transform duration-300">
+          Try It Free
+        </button>
       </div>
     </section>
   );
