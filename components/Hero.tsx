@@ -33,7 +33,7 @@ export default function Hero() {
   const words =
     "Generate alt text, keywords, and analyze app reviews automatically.";
   return (
-    <section className="bg-gradient-to-br from-blue-50 via-white to-blue-100 py-24 h-screen w-screen flex items-center justify-center">
+    <section className="bg-gradient-to-br from-blue-50 via-white to-blue-100 py-24 h-screen flex items-center justify-center">
       <div className="container mx-auto px-4 flex flex-col items-center text-center">
         <TypewriterEffect words={wordsfortype} />
         <h1 className="text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-6"></h1>
