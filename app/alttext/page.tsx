@@ -1,96 +1,85 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+
+interface FormInputs {
+  imageFile: FileList;
+  jsonInput: string;
+}
 
 const AltTextGenerator = () => {
   const [activeTab, setActiveTab] = useState<"upload" | "json">("upload");
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [jsonFile, setJsonFile] = useState<File | null>(null);
-  const [jsonInput, setJsonInput] = useState("");
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [generatedAltText, setGeneratedAltText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleImageUpload = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (file) {
-        if (file.size > 5 * 1024 * 1024) {
-          setError("Image size should be less than 5MB");
-          return;
-        }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors }
+  } = useForm<FormInputs>();
 
-        setImageFile(file);
-        setError("");
-        const url = URL.createObjectURL(file);
-        setPreviewUrl(url);
+  const generateAltTextMutation = useMutation({
+    mutationFn: async (data: FormData) => {
+      const response = await fetch('/api/generate-alt-text', {
+        method: 'POST',
+        body: data
+      });
 
-        // Clean up old preview URL
-        return () => URL.revokeObjectURL(url);
+      if (!response.ok) {
+        throw new Error('Failed to generate alt text');
       }
+
+      return response.json();
     },
-    []
-  );
+    onSuccess: (data) => {
+      setGeneratedAltText(data.altText);
+    }
+  });
 
-  const handleJsonFileUpload = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (file) {
-        if (file.type !== "application/json") {
-          setError("Please upload a valid JSON file");
-          return;
-        }
-        setJsonFile(file);
+  const onSubmit = async (data: FormInputs) => {
+    const formData = new FormData();
 
-        // Read the JSON file content
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          try {
-            const content = e.target?.result as string;
-            setJsonInput(content);
-            setError("");
-          } catch (err) {
-            setError("Failed to read JSON file");
-          }
-        };
-        reader.readAsText(file);
-      }
-    },
-    []
-  );
+    if (activeTab === "upload" && data.imageFile?.[0]) {
+      formData.append("image", data.imageFile[0]);
+    } else if (activeTab === "json" && data.jsonInput) {
+      formData.append("jsonData", data.jsonInput);
+    }
 
-  const handleJsonInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setJsonInput(event.target.value);
-    setError("");
+    generateAltTextMutation.mutate(formData);
   };
 
-  const generateAltText = async () => {
-    setIsLoading(true);
-    setError("");
-
-    try {
-      // Simulate API call - replace with actual image processing logic
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      if (activeTab === "upload" && imageFile) {
-        setGeneratedAltText(
-          "A high-resolution photograph showing " +
-            imageFile.name.split(".")[0].replace(/-/g, " ")
-        );
-      } else if (activeTab === "json" && jsonInput) {
-        const parsedJson = JSON.parse(jsonInput);
-        setGeneratedAltText(
-          `An image of ${parsedJson.subject || "unknown subject"} ${
-            parsedJson.description || ""
-          }`
-        );
+  // Watch for file changes to update preview
+  const imageFile = watch("imageFile");
+  React.useEffect(() => {
+    if (imageFile?.[0]) {
+      if (imageFile[0].size > 5 * 1024 * 1024) {
+        return;
       }
-    } catch (err) {
-      setError(
-        activeTab === "json" ? "Invalid JSON format" : "Failed to process image"
-      );
-    } finally {
-      setIsLoading(false);
+      const url = URL.createObjectURL(imageFile[0]);
+      setPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
+  }, [imageFile]);
+
+  const handleJsonFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.type !== "application/json") {
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const content = e.target?.result as string;
+          setValue("jsonInput", content);
+        } catch {
+          console.error("Failed to read JSON file");
+        }
+      };
+      reader.readAsText(file);
     }
   };
 
@@ -102,38 +91,43 @@ const AltTextGenerator = () => {
             Alt Text Generator
           </h1>
 
-          {/* Tab Switcher */}
           <div className="flex space-x-4 mb-6">
             <button
+              type="button"
               onClick={() => setActiveTab("upload")}
-              className={`px-4 py-2 rounded-lg font-medium ${
-                activeTab === "upload"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
+              className={`px-4 py-2 rounded-lg font-medium ${activeTab === "upload"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
             >
               Upload Image
             </button>
             <button
+              type="button"
               onClick={() => setActiveTab("json")}
-              className={`px-4 py-2 rounded-lg font-medium ${
-                activeTab === "json"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
+              className={`px-4 py-2 rounded-lg font-medium ${activeTab === "json"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
             >
               JSON Input
             </button>
           </div>
 
-          <div className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {activeTab === "upload" ? (
               <div className="space-y-4">
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={handleImageUpload}
+                    {...register("imageFile", {
+                      validate: {
+                        lessThan5MB: (files) =>
+                          !files[0] || files[0].size <= 5 * 1024 * 1024 ||
+                          "Image size should be less than 5MB",
+                      },
+                    })}
                     className="hidden"
                     id="image-upload"
                   />
@@ -185,28 +179,37 @@ const AltTextGenerator = () => {
                   <div className="relative">
                     <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent to-white"></div>
                     <textarea
+                      {...register("jsonInput")}
                       placeholder='Or paste JSON data (e.g., {"subject": "mountain landscape", "description": "during sunset"})'
                       className="w-full h-32 px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                      value={jsonInput}
-                      onChange={handleJsonInput}
                     />
                   </div>
                 </div>
               </div>
             )}
 
-            {error && (
+            {(errors.imageFile || errors.jsonInput) && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <p className="text-sm text-red-600">{error}</p>
+                <p className="text-sm text-red-600">
+                  {errors.imageFile?.message || errors.jsonInput?.message}
+                </p>
+              </div>
+            )}
+
+            {generateAltTextMutation.error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <p className="text-sm text-red-600">
+                  {generateAltTextMutation.error.message}
+                </p>
               </div>
             )}
 
             <button
-              onClick={generateAltText}
-              disabled={isLoading || (!imageFile && !jsonInput)}
+              type="submit"
+              disabled={generateAltTextMutation.isPending}
               className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? "Generating..." : "Generate Alt Text"}
+              {generateAltTextMutation.isPending ? "Generating..." : "Generate Alt Text"}
             </button>
 
             {generatedAltText && (
@@ -216,6 +219,7 @@ const AltTextGenerator = () => {
                 </h3>
                 <p className="text-gray-700">{generatedAltText}</p>
                 <button
+                  type="button"
                   onClick={() =>
                     navigator.clipboard.writeText(generatedAltText)
                   }
@@ -225,7 +229,7 @@ const AltTextGenerator = () => {
                 </button>
               </div>
             )}
-          </div>
+          </form>
         </div>
       </div>
     </div>

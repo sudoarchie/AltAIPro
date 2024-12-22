@@ -36,7 +36,7 @@ const SEODashboard = () => {
 
         setResult(hierarchy);
         setIsLoading(false);
-      } catch (err) {
+      } catch {
         setError("Failed to generate keyword hierarchy. Please try again.");
         setIsLoading(false);
       }

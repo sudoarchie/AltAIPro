@@ -7,14 +7,12 @@ import { useEffect } from "react";
 export const TypewriterEffect = ({
   words,
   className,
-  cursorClassName,
 }: {
   words: {
     text: string;
     className?: string;
   }[];
   className?: string;
-  cursorClassName?: string;
 }) => {
   // split text inside of words into array of characters
   const wordsArray = words.map((word) => {
@@ -101,14 +99,12 @@ export const TypewriterEffect = ({
 export const TypewriterEffectSmooth = ({
   words,
   className,
-  cursorClassName,
 }: {
   words: {
     text: string;
     className?: string;
   }[];
   className?: string;
-  cursorClassName?: string;
 }) => {
   // split text inside of words into array of characters
   const wordsArray = words.map((word) => {
@@ -177,10 +173,7 @@ export const TypewriterEffectSmooth = ({
           repeat: Infinity,
           repeatType: "reverse",
         }}
-        className={cn(
-          "block rounded-sm w-[4px]  h-2 sm:h-2 xl:h-2",
-          cursorClassName
-        )}
+        className={cn("block rounded-sm w-[4px]  h-2 sm:h-2 xl:h-2")}
       ></motion.span>
     </div>
   );

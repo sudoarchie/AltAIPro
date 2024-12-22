@@ -1,6 +1,5 @@
 import Image from "next/image";
 import img from "@/public/hero.png";
-import { TypewriterEffect } from "./ui/typewriter-effect";
 import { TextGenerateEffect } from "./ui/text-generate-effect";
 export default function Hero() {
   const words =
