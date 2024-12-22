@@ -19,7 +19,7 @@ export default function Header() {
           </Link>
           <Link
             href="#"
-            className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-5 py-2 rounded-lg hover:shadow-lg hover:scale-105 transition duration-300"
+            className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-5 py-2 rounded-full hover:shadow-lg hover:scale-105 transition duration-300"
           >
             Get Started
           </Link>
