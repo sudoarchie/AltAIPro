@@ -57,12 +57,6 @@ const TreeGraph: React.FC<TreeGraphProps> = ({ data }) => {
       ],
       layout: {
         name: "dagre",
-        rankDir: "TB",
-        nodeSep: 80,
-        rankSep: 100,
-        padding: 30,
-        animate: true,
-        animationDuration: 500,
       },
     });
 
